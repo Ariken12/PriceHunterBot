@@ -1,0 +1,5 @@
+python-telegram-bot[all]
+bs4
+requests
+lxml
+python-dotenv
