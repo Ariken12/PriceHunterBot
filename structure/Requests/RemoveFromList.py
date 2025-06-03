@@ -21,13 +21,12 @@ class RemoveFromList(ConversationHandler):
         )
 
     async def __start_handler(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
-        if update.effective_chat.id not in self.core.all_subs:
-            self.core.all_subs[update.effective_chat.id] = {}
-        self.requests = list(self.core.all_subs[update.effective_chat.id].keys())
+        self.core.init_chat(update.effective_chat.id)
+        self.requests = list(self.core.get_subs(update.effective_chat.id).keys())
         message = '''
 Список поисковых запросов:\n''' + '\n'.join(
-    [f'{i+1}. {query} за {self.core.all_subs[update.effective_chat.id][query]} руб.' 
-     for i, query in enumerate(self.core.all_subs[update.effective_chat.id])]) + '''
+    [f'{i+1}. {query} за {self.core.get_subs(update.effective_chat.id)[query]} руб.' 
+     for i, query in enumerate(self.core.get_subs(update.effective_chat.id))]) + '''
 Введите номер поискового запроса, который вы хотите удалить. (Разделение по запятым)'''
         await context.bot.send_message(chat_id=update.effective_chat.id, text=message, reply_markup=CANCEL_MARKUP)
         return INPUT_REMOVE_STATE
@@ -40,10 +39,10 @@ class RemoveFromList(ConversationHandler):
         answer = answer.split(',')
         errors = []
         for number in answer:
-            if int(number)-1 >= len(self.core.all_subs[update.effective_chat.id]):
+            if int(number)-1 >= len(self.core.get_subs(update.effective_chat.id)):
                 errors.append(number)
                 continue
-            self.core.all_subs[update.effective_chat.id].pop(self.requests[int(number)-1])
+            self.core.remove_sub(update.effective_chat.id, self.requests[int(number)-1])
         if len(errors) > 0:
             await context.bot.send_message(chat_id=update.effective_chat.id, text=f'Номер(а) {", ".join(errors)} не существует')
         await context.bot.send_message(chat_id=update.effective_chat.id, text='Удалено', reply_markup=MENU_MARKUP)

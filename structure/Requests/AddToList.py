@@ -24,8 +24,7 @@ class AddToList(ConversationHandler):
         )
 
     async def __start_handler(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
-        if update.effective_chat.id not in self.core.all_subs:
-            self.core.all_subs[update.effective_chat.id] = {}
+        self.core.init_chat(update.effective_chat.id)
         await context.bot.send_message(chat_id=update.effective_chat.id, text='Введите поисковый запрос', reply_markup=CANCEL_MARKUP)
         return INPUT_SEARCH_STATE
 
@@ -39,7 +38,7 @@ class AddToList(ConversationHandler):
         if not re.fullmatch(r'((?<![\w.])[+]?(?:\d+\.\d+|\d+\.|\.\d+|\d+))', answer):
             await context.bot.send_message(chat_id=update.effective_chat.id, text='Введите число (руб.)')
             return INPUT_COST_STATE
-        self.core.all_subs[update.effective_chat.id][self.search_request] = float(answer)
+        self.core.add_sub(update.effective_chat.id, self.search_request, float(answer))
         await context.bot.send_message(chat_id=update.effective_chat.id, text='Добавлено', reply_markup=MENU_MARKUP)
         return ConversationHandler.END
     

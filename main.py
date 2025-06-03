@@ -14,12 +14,12 @@ if os.path.exists(dotenv_path):
 from Core import Core
 import structure.Requests as Requests
 import structure.Processes as Processes
-
+from settings import *
 
 logging.basicConfig(level=logging.INFO)
 
 def main():
-    core = Core()
+    core = Core(SAVE_FILENAME)
     bot = ApplicationBuilder().token(os.environ.get('API_KEY')).build()
     
     for repeater in Processes.__all__:
@@ -33,6 +33,7 @@ def main():
         bot.run_polling()
     except Exception as e:
         logging.error(f'{type(e)}: {e}')
+    finally:
         core.dump()
 
 if __name__ == '__main__':

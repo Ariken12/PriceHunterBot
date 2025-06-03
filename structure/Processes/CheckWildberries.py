@@ -39,7 +39,7 @@ class CheckWildberries(BaseProcess):
 
     async def __call__(self, context: ContextTypes.DEFAULT_TYPE):
         for sub in self.core.all_subs:  
-            for query in self.core.all_subs[sub]:
+            for query in self.core.all_subs[sub].keys():
                 product = await self.parse_wildberries(query, self.core.all_subs[sub][query])
                 if product is None:
                     continue
