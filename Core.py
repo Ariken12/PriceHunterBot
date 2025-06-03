@@ -30,7 +30,7 @@ class Core:
         return self.all_subs[chat_id]
     
     def init_chat(self, chat):
-        if not chat in self.all_subs:
+        if not str(chat) in self.all_subs:
             self.all_subs[str(chat)] = {}
 
     def dump(self):
