@@ -1,6 +1,6 @@
 from telegram.ext import ContextTypes, CommandHandler, ConversationHandler, MessageHandler, filters
 from telegram import Update
-from .Markups import MENU_MARKUP, CANCEL_MARKUP
+from .Markups import MENU_MARKUP, REMOVE_MARKUP
 import re
 
 
@@ -28,7 +28,7 @@ class RemoveFromList(ConversationHandler):
     [f'{i+1}. {query} за {self.core.get_subs(update.effective_chat.id)[query]} руб.' 
      for i, query in enumerate(self.core.get_subs(update.effective_chat.id))]) + '''
 Введите номер поискового запроса, который вы хотите удалить. (Разделение по запятым)'''
-        await context.bot.send_message(chat_id=update.effective_chat.id, text=message, reply_markup=CANCEL_MARKUP)
+        await context.bot.send_message(chat_id=update.effective_chat.id, text=message, reply_markup=REMOVE_MARKUP)
         return INPUT_REMOVE_STATE
 
     async def __request_handler(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
