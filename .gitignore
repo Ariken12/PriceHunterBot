@@ -5,3 +5,6 @@ __pycache__/**
 test**
 .env
 util*
+status*
+todo
+log*

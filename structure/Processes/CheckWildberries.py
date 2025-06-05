@@ -1,4 +1,5 @@
 from .BaseProcess import BaseProcess
+from settings import PARSER_HEADERS
 
 from telegram.ext import ContextTypes
 from telegram import Update
@@ -6,6 +7,9 @@ import requests
 import asyncio
 import json
 
+
+URL_SEARCH = "https://search.wb.ru/exactmatch/ru/common/v13/search?ab_testid=price_01&curr=rub&dest=-1&lang=ru&query={query}&resultset=catalog&page={page}"
+URL_PRODUCT = "https://www.wildberries.ru/catalog/{product}/detail.aspx"
 
 class CheckWildberries(BaseProcess):
     def __init__(self, core):
@@ -15,9 +19,8 @@ class CheckWildberries(BaseProcess):
     async def parse_wildberries(self, query, price):
         ids = []
         for page in range(1, 61):
-            url = f"https://search.wb.ru/exactmatch/ru/common/v13/search?ab_testid=price_01&curr=rub&dest=-1&lang=ru&query={query}&resultset=catalog&page={page}"
-            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
-            response = await asyncio.to_thread(requests.get, url, headers=headers)
+            url = URL_SEARCH.format(query=query, page=page)
+            response = await asyncio.to_thread(requests.get, url, headers=PARSER_HEADERS)
             payload = json.loads(response.text)
             if 'data' not in payload:
                 break
@@ -33,7 +36,7 @@ class CheckWildberries(BaseProcess):
                         return {
                             'name': product['name'],
                             'price': size['price']['total'] / 100,
-                            'url': f"https://www.wildberries.ru/catalog/{product['id']}/detail.aspx"
+                            'url': URL_PRODUCT.format(product=product['id'])
                             }
                 ids.append(product['id'])
 

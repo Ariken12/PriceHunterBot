@@ -30,14 +30,14 @@ class Core:
         return self.all_subs[chat_id]
     
     def init_chat(self, chat):
-        if not chat in self.all_subs:
+        if not str(chat) in self.all_subs:
             self.all_subs[str(chat)] = {}
 
     def dump(self):
         with open(self.filename, 'w', encoding='utf-8') as f:
             json.dump(self.all_subs, f)
-        with open(datetime.datetime.now().strftime('%Y-%m-%d,%H:%M:%S'), 'w', encoding='utf-8') as f:
-            json.dump(self.all_subs, f)
+        # with open('log ' + datetime.datetime.now().strftime('%Y-%m-%d,%H:%M:%S')+self.filename, 'w', encoding='utf-8') as f:
+        #     json.dump(self.all_subs, f)
 
     def load(self):
         with open(self.filename, 'r', encoding='utf-8') as f:
