@@ -25,7 +25,7 @@ class RemoveFromList(ConversationHandler):
         self.requests = list(self.core.get_subs(update.effective_chat.id).keys())
         message = '''
 Список поисковых запросов:\n''' + '\n'.join(
-    [f'{i+1}. {query} за {self.core.get_subs(update.effective_chat.id)[query]} руб.' 
+    [f'{i+1}. {query}' 
      for i, query in enumerate(self.core.get_subs(update.effective_chat.id))]) + '''
 Введите номер поискового запроса, который вы хотите удалить. (Разделение по запятым)'''
         await context.bot.send_message(chat_id=update.effective_chat.id, text=message, reply_markup=REMOVE_MARKUP)
