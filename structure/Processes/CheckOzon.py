@@ -15,7 +15,7 @@ class CheckOzon(BaseProcess):
     async def parse_wildberries(self, query, price):
         ids = []
         for page in range(1, 61):
-            url = f"https://www.ozon.ru/category/smartfony-15502/apple-26303000/?brand_was_predicted=true&category_was_predicted=true&deny_category_prediction=true&from_global=true&text=iphone+13"
+            url = f"https://www.ozon.ru/category/smartfony-15502/apple-26303000/?brand_was_predicted=true&category_was_predicted=true&deny_category_prediction=true&from_global=true&text={query}"
             headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
             response = await asyncio.to_thread(requests.get, url, headers=headers)
             payload = json.loads(response.text)

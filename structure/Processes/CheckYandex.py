@@ -15,7 +15,7 @@ class CheckYandex(BaseProcess):
     async def parse_wildberries(self, query, price):
         ids = []
         for page in range(1, 61):
-            url = f"https://market.yandex.ru/search?text=iphone+13&cvredirect=1&page={page}"
+            url = f"https://market.yandex.ru/search?text={query}&cvredirect=1&page={page}"
             headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
             response = await asyncio.to_thread(requests.get, url, headers=headers)
             payload = json.loads(response.text)
