@@ -35,13 +35,16 @@ class CheckWildberries(BaseProcess):
                 if 'sizes' not in product:
                     continue
                 for size in product['sizes']:
-                    if size['price']['total'] <= price * 100:
-                        return {
+                    if size['price']['total'] <= price * 100: 
+                        ids.append({
                             'name': product['name'],
                             'price': size['price']['total'] / 100,
                             'url': URL_PRODUCT.format(product=product['id'])
-                            }
-                ids.append(product['id'])
+                            })
+        if len(ids) == 0:
+            return
+        ids.sort(key=lambda x: x['price'])
+        return ids[0]
 
     async def __call__(self, context: ContextTypes.DEFAULT_TYPE):
         for sub in self.core.get_users():  
@@ -49,9 +52,8 @@ class CheckWildberries(BaseProcess):
                 product = await self.parse_wildberries(query, self.core.get_query(sub, query))
                 if product is None:
                     continue
-                await context.bot.send_message(
-                            chat_id=sub,
-                            text=f"🔥 Найдено соответствие!\n{product['name']}\nЦена: {product['price']}₽\nСсылка: {product['url']}"
-                        )
                 self.core.set_founded(sub, query)
-                return
+                await context.bot.send_message(
+                                    chat_id=sub,
+                                    text=f"🔥 Найдено соответствие!\n{product['name']}\nЦена: {product['price']}₽\nСсылка: {product['url']}"
+                                )
